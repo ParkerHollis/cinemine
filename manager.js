@@ -36,12 +36,6 @@ request({
 	})
 }, 1000);
 
-function convertTime(ms) {
-	days = Math.floor(ms / 86400000);
-	hours = Math.floor(ms / 3600000) - (days*24);
-	minutes = Math.floor((ms % 3600000) / 60000);
-	seconds = Math.floor(((ms % 360000) % 60000) / 1000);
-}
 })
 
 function log(message, item) {
