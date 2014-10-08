@@ -6,15 +6,15 @@ var IPList = ["localhost:4711", "localhost:4711", "localhost:4711"];
 
 IPList.forEach(function(item) {
 var url = "http://"+item+"/stats"
-console.log('Attemping to connect to node.');
+log('Attemping to connect.', item);
 request({
 	url: url,
     json: true
 }, function (error, response, body) {
 		if (!error && response.statusCode === 200) {
-			console.log('Connection to probe established.')
+			log('Connection established.', item)
 	} else {
-			console.log('Unable to connect to probe.');
+			log('Unable to connect.', item);
 	}
 })
 setInterval(function(){
@@ -30,7 +30,7 @@ request({
 			var percentMem = Math.floor((usedMem/totalMem)*100);
 			var hostName = body.name;
 			convertTime(ms);
-			console.log(hostName+" | "+freeMem+"MB Free | Uptime: "+days+"d "+hours+"h "+minutes+"m "+seconds+"s | Memory Usage: "+percentMem+"%");
+			log(freeMem+"MB Free | Uptime: "+days+"d "+hours+"h "+minutes+"m "+seconds+"s | Memory Usage: "+percentMem+"%", item);
 		}
 	})
 }, 1000);
@@ -42,3 +42,7 @@ function convertTime(ms) {
 	seconds = Math.floor(((ms % 360000) % 60000) / 1000);
 }
 })
+
+function log(message, item) {
+	console.log(item+' | '+message);
+}
