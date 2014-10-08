@@ -5,19 +5,20 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var request = require("request");
 
-var IPList = ["localhost:4711", "localhost:4712", "localhost:4713"];
+var IPList = ['127.0.0.1|Razer'];
 
 IPList.forEach(function(item) {
-var url = "http://"+item+"/stats"
-log('Attemping to connect.', item);
+var address = item.split("|")[0];
+var friendlyName = item.split("|")[1];
+var url = "http://"+address+":4711/stats"
 request({
 	url: url,
     json: true
 }, function (error, response, body) {
 		if (!error && response.statusCode === 200) {
-			log('Connection established.', item)
+			
 	} else {
-			log('Unable to connect.', item);
+			
 	}
 })
 setInterval(function(){
@@ -26,14 +27,11 @@ request({
     json: true
 }, function (error, response, body) {
 		if (!error && response.statusCode === 200) {
-			var ms = Math.floor(body.uptime*1000);
+			var uptime = Math.floor(body.uptime);
 			var freeMem = (Math.floor((body.freemem)/1048576));
 			var totalMem = (Math.floor((body.totalmem)/1048576));
 			var usedMem = totalMem-freeMem;
-			var percentMem = Math.floor((usedMem/totalMem)*100);
-			var hostName = body.name;
-			convertTime(ms);
-			log(freeMem+"MB Free | Uptime: "+days+"d "+hours+"h "+minutes+"m "+seconds+"s | Memory Usage: "+percentMem+"%", item);
+			log(uptime+"|"+usedMem+"|"+totalMem, friendlyName);
 		}
 	})
 }, 1000);
@@ -47,7 +45,8 @@ function convertTime(ms) {
 })
 
 function log(message, item) {
-	console.log(item+' | '+message);
+	io.emit('data', item+"|"+message);
+	console.log(item+"|"+message);
 }
 
 app.get('/', function(req, res){
@@ -60,4 +59,11 @@ app.get('/', function(req, res){
 
 http.listen(4000, function(){
   
+});
+
+io.on('connection', function(socket){
+  io.emit('IPList', IPList);
+  socket.on('disconnect', function(){
+    io.emit('IPList', '');
+  });
 });
