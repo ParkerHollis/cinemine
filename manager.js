@@ -27,14 +27,17 @@ request({
 			var ms = Math.floor(body.uptime*1000);
 			var freeMem = (Math.floor((body.freemem)/1048576));
 			var totalMem = (Math.floor((body.totalmem)/1048576));
+			var usedMem = totalMem-freeMem;
+			var percentMem = Math.floor((usedMem/totalMem)*100);
 			convertTime(ms);
-			console.log(freeMem+"MB Free | Uptime: "+hours+"h "+minutes+"m "+seconds+"s");
+			console.log(freeMem+"MB Free | Uptime: "+days+"d "+hours+"h "+minutes+"m "+seconds+"s | Memory Usage: "+percentMem+"%");
 		}
 	})
 }, 1000);
 
 function convertTime(ms) {
-	hours = Math.floor(ms / 3600000);
+	days = Math.floor(ms / 86400000);
+	hours = Math.floor(ms / 3600000) - (days*24);
 	minutes = Math.floor((ms % 3600000) / 60000);
 	seconds = Math.floor(((ms % 360000) % 60000) / 1000);
 }
