@@ -23,10 +23,17 @@ request({
     json: true
 }, function (error, response, body) {
 		if (!error && response.statusCode === 200) {
-		var uptime = body.uptime;
+		var ms = Math.floor(body.uptime*1000);
 		var freeMem = (Math.floor((body.freemem)/1048576));
 		var totalMem = (Math.floor((body.totalmem)/1048576));
-		console.log(freeMem+"MB Free | Uptime: "+uptime+"s");
+		convertTime(ms);
+		console.log(freeMem+"MB Free | Uptime: "+hours+"h "+minutes+"m "+seconds+"s");
     }
 })
 }, 1000);
+
+function convertTime(ms) {
+	hours = Math.floor(ms / 3600000);
+	minutes = Math.floor((ms % 3600000) / 60000);
+	seconds = Math.floor(((ms % 360000) % 60000) / 1000);
+}
