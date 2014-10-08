@@ -43,7 +43,7 @@ function log(message, item) {
 }
 
 app.get('/', function(req, res){
-  res.sendFile(application_root+'/index.html');
+  res.sendFile(application_root+'/public/index.html');
 });
 
  app.get(/^(.+)$/, function(req, res){ 

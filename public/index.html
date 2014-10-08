@@ -1,0 +1,93 @@
+<html>
+  <head>
+  <title>Cinemine</title>
+  <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+  <script src="http://code.highcharts.com/highcharts.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <style>
+  h1,h2,h3 {
+	font-family:Helvetica;
+  }
+  </style>
+  </head>
+  <body>
+	<div>
+	<h1 style="text-align:center;">Nodes</h1>
+	</div>
+	<div id="probes">
+    <script>
+      var socket = io();
+      socket.on('IPList', function(msg){
+        var IPList = msg;
+        IPList.forEach(function(item) {
+		  var address = item.split("|")[0];
+		  var friendlyName = item.split("|")[1];
+		  $('#probes').append('<div id="'+friendlyName+'" style="width:200px; height:200px;"></div>');
+        })
+      });
+
+      socket.on('data', function(msg){
+        var location = msg.split("|")[0];
+        var uptime = msg.split("|")[1];
+		var usedMem = msg.split("|")[2];
+		var totalMem = msg.split("|")[3];
+		var freeMem = totalMem-usedMem;
+		convertTime(uptime);
+		updateChart(location, usedMem, freeMem);
+      });
+    </script>
+	</div>
+	<script>
+	function updateChart(chart, usedMem, freeMem) {
+		var destination = '#'+chart;
+		var usedMem = parseInt(usedMem);
+		var freeMem = parseInt(freeMem);
+		var memoryData = [
+		['Free', freeMem],
+		['Used', usedMem]
+		];
+	$(function () {
+    $(destination).highcharts({
+		credits: {
+            enabled: false
+        },
+        chart: {
+            plotShadow: false
+        },
+        title: {
+            text: ''
+        },
+        plotOptions: {
+            pie: {
+                dataLabels: {
+                    enabled: false,
+                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                    style: {
+                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                    }
+                }
+            }
+        },
+        series: [{
+            type: 'pie',
+			name: 'Megabytes',
+			animation: false,
+            data: memoryData
+        }]
+    });
+	});
+	}
+	</script>
+	<br>
+  <script>
+  function convertTime(seconds) {
+	ms = seconds*1000;
+	days = Math.floor(ms / 86400000);
+	hours = Math.floor(ms / 3600000) - (days*24);
+	minutes = Math.floor((ms % 3600000) / 60000);
+	sec = Math.floor(((ms % 360000) % 60000) / 1000);
+	}
+  </script>
+  </body>
+</html>
