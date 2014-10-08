@@ -2,8 +2,8 @@ express = require( 'express' );
 var app = require('express')();
 var request = require("request");
 
-var IP1 = 'localhost';
-var url = "http://"+IP1+":4711/stats"
+var IP = 'localhost';
+var url = "http://"+IP+":4711/stats"
 
 console.log('Attemping to connect to node.');
 request({
