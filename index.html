@@ -5,6 +5,10 @@
   <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
   </head>
   <body>
+	<div>
+	Testing.
+	</div>
+	<div id="probes">
     <script>
       var socket = io();
       socket.on('IPList', function(msg){
@@ -12,15 +16,18 @@
         IPList.forEach(function(item) {
 		  var address = item.split("|")[0];
 		  var friendlyName = item.split("|")[1];
-          document.write('<h1 id="'+friendlyName+'"><h2>'+friendlyName+':'+address+'</h2></h1>');
+		  $('#probes').append('<h1 id="'+friendlyName+'">Connecting...<h2>'+friendlyName+' @ '+address+'</h2></h1>');
         })
       });
 
       socket.on('data', function(msg){
         var location = msg.split("|")[0];
-        var message = msg.split("|")[1];
-        $('#'+location).html(message);
+        var uptime = msg.split("|")[1];
+		var usedMem = msg.split("|")[2];
+		var totalMem = msg.split("|")[3];
+        $('#'+location).html(usedMem);
       });
     </script>
+	</div>
   </body>
 </html>

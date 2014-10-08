@@ -5,7 +5,7 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var request = require("request");
 
-var IPList = ['127.0.0.1|Razer'];
+var IPList = ['127.0.0.1|Razer','192.168.1.148|Macbook'];
 
 IPList.forEach(function(item) {
 var address = item.split("|")[0];
@@ -16,9 +16,9 @@ request({
     json: true
 }, function (error, response, body) {
 		if (!error && response.statusCode === 200) {
-			
+			console.log('Connected to '+friendlyName+' at '+address);
 	} else {
-			
+			console.log('Unable to connect to '+friendlyName+' at '+address);
 	}
 })
 setInterval(function(){
@@ -46,7 +46,6 @@ function convertTime(ms) {
 
 function log(message, item) {
 	io.emit('data', item+"|"+message);
-	console.log(item+"|"+message);
 }
 
 app.get('/', function(req, res){
