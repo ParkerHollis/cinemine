@@ -2,8 +2,8 @@ express = require( 'express' );
 var app = require('express')();
 var request = require("request");
 
-var IP = 'localhost';
-var url = "http://"+IP+":4711/stats"
+var IP = process.argv[2];
+var url = "http://"+IP+"/stats"
 
 console.log('Attemping to connect to node.');
 request({
@@ -13,7 +13,8 @@ request({
 		if (!error && response.statusCode === 200) {
 			console.log('Connection to probe established.')
 	} else {
-			console.log('Unable to connect to probe.')
+			console.log('Unable to connect to probe.');
+			process.exit(1);
 	}
 })
 
@@ -23,13 +24,13 @@ request({
     json: true
 }, function (error, response, body) {
 		if (!error && response.statusCode === 200) {
-		var ms = Math.floor(body.uptime*1000);
-		var freeMem = (Math.floor((body.freemem)/1048576));
-		var totalMem = (Math.floor((body.totalmem)/1048576));
-		convertTime(ms);
-		console.log(freeMem+"MB Free | Uptime: "+hours+"h "+minutes+"m "+seconds+"s");
-    }
-})
+			var ms = Math.floor(body.uptime*1000);
+			var freeMem = (Math.floor((body.freemem)/1048576));
+			var totalMem = (Math.floor((body.totalmem)/1048576));
+			convertTime(ms);
+			console.log(freeMem+"MB Free | Uptime: "+hours+"h "+minutes+"m "+seconds+"s");
+		}
+	})
 }, 1000);
 
 function convertTime(ms) {
