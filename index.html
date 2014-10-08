@@ -3,10 +3,15 @@
   <title>Nodes</title>
   <script src="/socket.io/socket.io.js"></script>
   <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+  <style>
+  h1,h2,h3 {
+	font-family:Helvetica;
+  }
+  </style>
   </head>
   <body>
 	<div>
-	Testing.
+	<h1 style="text-align:center;">Nodes</h1>
 	</div>
 	<div id="probes">
     <script>
@@ -16,7 +21,7 @@
         IPList.forEach(function(item) {
 		  var address = item.split("|")[0];
 		  var friendlyName = item.split("|")[1];
-		  $('#probes').append('<h1 id="'+friendlyName+'">Connecting...<h2>'+friendlyName+' @ '+address+'</h2></h1>');
+		  $('#probes').append('<h1 id="'+friendlyName+'">Connecting...<h3>'+friendlyName+' @ '+address+'</h3></h1>');
         })
       });
 
