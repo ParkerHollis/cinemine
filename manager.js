@@ -1,8 +1,11 @@
+var application_root = __dirname,
 express = require( 'express' );
 var app = require('express')();
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
 var request = require("request");
 
-var IPList = ["localhost:4711", "localhost:4711", "localhost:4711"];
+var IPList = ["localhost:4711", "localhost:4712", "localhost:4713"];
 
 IPList.forEach(function(item) {
 var url = "http://"+item+"/stats"
@@ -46,3 +49,15 @@ function convertTime(ms) {
 function log(message, item) {
 	console.log(item+' | '+message);
 }
+
+app.get('/', function(req, res){
+  res.sendFile(application_root+'/index.html');
+});
+
+ app.get(/^(.+)$/, function(req, res){ 
+     res.sendFile( __dirname + req.params[0]); 
+ });
+
+http.listen(4000, function(){
+  
+});
