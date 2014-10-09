@@ -31,8 +31,7 @@ request({
 			var freeMem = (Math.floor((body.freemem)/1048576));
 			var totalMem = (Math.floor((body.totalmem)/1048576));
 			var usedMem = totalMem-freeMem;
-			var cpu = body.cpu;
-			log(uptime+"|"+usedMem+"|"+totalMem+"|"+cpu, friendlyName);
+			log(uptime+"|"+usedMem+"|"+totalMem, friendlyName);
 		}
 	})
 }, 1000);

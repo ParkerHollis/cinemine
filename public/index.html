@@ -85,15 +85,14 @@ body{
         var uptime = msg.split("|")[1];
 		var usedMem = msg.split("|")[2];
 		var totalMem = msg.split("|")[3];
-		var cpu = msg.split("|")[4];
 		var freeMem = totalMem-usedMem;
 		convertTime(uptime);
-		updateChart(location, usedMem, freeMem);
+		updateChartMem(location, usedMem, freeMem);
       });
     </script>
 	</div>
 	<script>
-	function updateChart(chart, usedMem, freeMem) {
+	function updateChartMem(chart, usedMem, freeMem) {
 		var destination = '#'+chart+'Mem';
 		var usedMem = parseInt(usedMem);
 		var freeMem = parseInt(freeMem);
