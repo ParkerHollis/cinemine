@@ -78,12 +78,13 @@ body{
         var uptime = msg.split("|")[1];
 		var usedMem = msg.split("|")[2];
 		var totalMem = msg.split("|")[3];
+		var usedMem = (Math.floor((usedMem/totalMem)*1000))/10;
 		var usedCPU = msg.split("|")[4];
 		var freeCPU = 100-(usedCPU);
 		var freeMem = totalMem-usedMem;
 		convertTime(uptime);
 		updateDiv(location, usedCPU, 'CPU', '%');
-		updateDiv(location, usedMem, 'RAM', 'MB');
+		updateDiv(location, usedMem, 'RAM', '%');
       });
     </script>
 	</div>

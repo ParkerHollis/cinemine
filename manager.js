@@ -66,8 +66,8 @@ io.on('connection', function(socket){
 
 setInterval(function(){
 	var uptime = os.uptime();
-	var totalMem = (Math.floor((os.totalmem())/1048576));
-	var freeMem = (Math.floor((os.freemem())/1048576));
+	var totalMem = Math.floor((os.totalmem())/1048576);
+	var freeMem = Math.floor((os.freemem())/1048576);
 	var usedMem = totalMem-freeMem;
 	utils.cpuUsage(function(v){
 		var cpu = Math.floor(v*1000)/10;
