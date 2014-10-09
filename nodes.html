@@ -1,0 +1,175 @@
+<html>
+  <head>
+  <title>Cinemine</title>
+  <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+  <script src="http://code.highcharts.com/highcharts.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+  <style>
+html,body{
+  	height:100%;
+}
+
+body{
+  	padding-top:50px; /*padding for navbar*/
+}
+
+.navbar-custom .icon-bar {
+	background-color:#fff;
+}
+
+.navbar-custom {
+	background-color: #168ccc;
+    color:#fff;
+}
+
+.navbar-custom li>a:hover,.navbar-custom li>a:focus {
+	background-color:#49bfff;
+}
+
+.navbar-custom a{
+    color:#fefefe;
+}
+
+.navbar-custom .form-control:focus {
+	border-color: #49bfff;
+	outline: 0;
+	-webkit-box-shadow: inset 0 0 0;
+	box-shadow: inset 0 0 0;
+}
+
+#main, #main>.row {
+	height:100%;
+}
+
+#main>.row {
+    overflow-y:scroll;
+}
+
+#left {
+	height:100%;
+}
+  </style>
+  </head>
+  <body>
+  <div class="container">
+	<div class="navbar navbar-custom navbar-fixed-top">
+		<div class="navbar-header"><a class="navbar-brand" href="#">Node Manager</a>
+		</div>
+    </div><br>
+	<div id="probes" class="container">
+    <script>
+      var socket = io();
+      socket.on('IPList', function(msg){
+        var IPList = msg;
+        IPList.forEach(function(item) {
+		  var address = item.split("|")[0];
+		  var friendlyName = item.split("|")[1];
+		  $('#probes').append('<h2>'+friendlyName+' <small>'+address+'</small></h2><div class="well row"><div id="'+friendlyName+'Mem" style="width:50%; height:200px;" class="col-md-6"></div><div id="'+friendlyName+'CPU" style="width:50%; height:200px;" class="col-md-6"></div></div>');
+        })
+      });
+
+      socket.on('data', function(msg){
+        var location = msg.split("|")[0];
+        var uptime = msg.split("|")[1];
+		var usedMem = msg.split("|")[2];
+		var totalMem = msg.split("|")[3];
+		var usedCPU = msg.split("|")[4];
+		var freeCPU = 100-(usedCPU);
+		var freeMem = totalMem-usedMem;
+		convertTime(uptime);
+		updateChartMem(location, usedMem, freeMem);
+		updateChartCPU(location, usedCPU, freeCPU);
+      });
+    </script>
+	</div>
+	<script>
+	function updateChartMem(chart, usedMem, freeMem) {
+		var destination = '#'+chart+'Mem';
+		var usedMem = parseInt(usedMem);
+		var freeMem = parseInt(freeMem);
+		var memoryData = [
+		['Free', freeMem],
+		['Used', usedMem]
+		];
+	$(function () {
+    $(destination).highcharts({
+		credits: {
+            enabled: false
+        },
+        chart: {
+            plotShadow: false,
+			backgroundColor: null
+        },
+		title: {
+            text: 'Memory'
+        },
+        plotOptions: {
+            pie: {
+                dataLabels: {
+                    enabled: false,
+                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                    style: {
+                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                    }
+                }
+            }
+        },
+        series: [{
+            type: 'pie',
+			name: 'Megabytes',
+			animation: false,
+            data: memoryData
+        }]
+    });
+	});
+	}
+	</script>
+	<br>
+	<script>
+	function updateChartCPU(chart, usedCPU, freeCPU) {
+		var destination = '#'+chart+'CPU';
+		var usedCPU = parseInt(usedCPU);
+		var freeCPU = parseInt(freeCPU);
+		var cpuData = [
+		['Free', freeCPU],
+		['Used', usedCPU]
+		];
+	$(function () {
+    $(destination).highcharts({
+		credits: {
+            enabled: false
+        },
+        chart: {
+            plotShadow: false,
+			backgroundColor: null
+        },
+		title: {
+            text: 'CPU'
+        },
+        plotOptions: {
+            pie: {
+                dataLabels: {
+                    enabled: false,
+                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                    style: {
+                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                    }
+                }
+            }
+        },
+        series: [{
+            type: 'pie',
+			name: 'Percent',
+			animation: false,
+            data: cpuData
+        }]
+    });
+	});
+	}
+  </script>
+  </div>
+  </body>
+</html>

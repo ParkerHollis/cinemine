@@ -4,9 +4,10 @@ var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var request = require("request");
+var os  = require('os');
 var utils  = require('os-utils');
 
-var IPList = ['127.0.0.1|Blade','192.168.1.148|Macbook'];
+var IPList = ['192.168.1.148|Macbook'];
 
 IPList.forEach(function(item) {
 var address = item.split("|")[0];
@@ -62,3 +63,14 @@ io.on('connection', function(socket){
     io.emit('IPList', '');
   });
 });
+
+setInterval(function(){
+	var uptime = os.uptime();
+	var totalMem = (Math.floor((os.totalmem())/1048576));
+	var freeMem = (Math.floor((os.freemem())/1048576));
+	var usedMem = totalMem-freeMem;
+	utils.cpuUsage(function(v){
+		var cpu = Math.floor(v*1000)/10;
+		io.emit('data', "Manager|"+uptime+"|"+usedMem+"|"+totalMem+"|"+cpu);
+	});
+}, 2000);

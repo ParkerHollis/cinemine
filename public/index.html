@@ -3,7 +3,6 @@
   <title>Cinemine</title>
   <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-  <script src="http://code.highcharts.com/highcharts.js"></script>
   <script src="/socket.io/socket.io.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
@@ -60,6 +59,8 @@ body{
 		</div>
     </div><br>
 	<div id="probes" class="container">
+	<div id="row">
+	<div class="col-md-3"><div class="well"><h2 style="margin-top:0px; text-align:center; font-size:24px; font-weight:bold;">Manager</h2><hr>CPU Usage: <h4 id="ManagerCPU">Connecting...</h4>RAM Usage: <h4 id="ManagerRAM">Connecting...</h4></div></div>
     <script>
       var socket = io();
       socket.on('IPList', function(msg){
@@ -67,7 +68,7 @@ body{
         IPList.forEach(function(item) {
 		  var address = item.split("|")[0];
 		  var friendlyName = item.split("|")[1];
-		  $('#probes').append('<h2>'+friendlyName+' <small>'+address+'</small></h2><div class="well row"><div id="'+friendlyName+'Mem" style="width:50%; height:200px;" class="col-md-6"></div><div id="'+friendlyName+'CPU" style="width:50%; height:200px;" class="col-md-6"></div></div>');
+		  $('#probes').append('<div class="col-md-3"><div class="well"><h2 style="margin-top:0px; text-align:center; font-size:24px; font-weight:bold;">'+friendlyName+'</h2><hr>CPU Usage: <h4 id="'+friendlyName+'CPU">Connecting...</h4>RAM Usage: <h4 id="'+friendlyName+'RAM">Connecting...</h4></div></div>');
         })
       });
 
@@ -80,97 +81,12 @@ body{
 		var freeCPU = 100-(usedCPU);
 		var freeMem = totalMem-usedMem;
 		convertTime(uptime);
-		updateChartMem(location, usedMem, freeMem);
-		updateChartCPU(location, usedCPU, freeCPU);
+		updateDiv(location, usedCPU, 'CPU', '%');
+		updateDiv(location, usedMem, 'RAM', 'MB');
       });
     </script>
 	</div>
-	<script>
-	function updateChartMem(chart, usedMem, freeMem) {
-		var destination = '#'+chart+'Mem';
-		var usedMem = parseInt(usedMem);
-		var freeMem = parseInt(freeMem);
-		var memoryData = [
-		['Free', freeMem],
-		['Used', usedMem]
-		];
-	$(function () {
-    $(destination).highcharts({
-		credits: {
-            enabled: false
-        },
-        chart: {
-            plotShadow: false,
-			backgroundColor: null
-        },
-		title: {
-            text: 'Memory'
-        },
-        plotOptions: {
-            pie: {
-                dataLabels: {
-                    enabled: false,
-                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
-                    style: {
-                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
-                    }
-                }
-            }
-        },
-        series: [{
-            type: 'pie',
-			name: 'Megabytes',
-			animation: false,
-            data: memoryData
-        }]
-    });
-	});
-	}
-	</script>
-	<br>
-	<script>
-	function updateChartCPU(chart, usedCPU, freeCPU) {
-		var destination = '#'+chart+'CPU';
-		var usedCPU = parseInt(usedCPU);
-		var freeCPU = parseInt(freeCPU);
-		var cpuData = [
-		['Free', freeCPU],
-		['Used', usedCPU]
-		];
-	$(function () {
-    $(destination).highcharts({
-		credits: {
-            enabled: false
-        },
-        chart: {
-            plotShadow: false,
-			backgroundColor: null
-        },
-		title: {
-            text: 'CPU'
-        },
-        plotOptions: {
-            pie: {
-                dataLabels: {
-                    enabled: false,
-                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
-                    style: {
-                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
-                    }
-                }
-            }
-        },
-        series: [{
-            type: 'pie',
-			name: 'Percent',
-			animation: false,
-            data: cpuData
-        }]
-    });
-	});
-	}
-	</script>
-	<br>
+	</div>
   <script>
   function convertTime(seconds) {
 	ms = seconds*1000;
@@ -178,7 +94,13 @@ body{
 	hours = Math.floor(ms / 3600000) - (days*24);
 	minutes = Math.floor((ms % 3600000) / 60000);
 	sec = Math.floor(((ms % 360000) % 60000) / 1000);
-	}
+  }
+	
+  function updateDiv(location, data, type, unit) {
+	var destination = '#'+location+type;
+	var text = data+'<small>'+unit+'</small>';
+	$(destination).html(text);
+  }
   </script>
   </div>
   </body>

@@ -18,4 +18,4 @@ Start manager with:
 ```
 node manager.js
 ```
-and access the manager at `localhost:4000`.
+and access the manager's web interface at `localhost:4000`.
