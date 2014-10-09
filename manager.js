@@ -74,3 +74,9 @@ setInterval(function(){
 		io.emit('data', "Manager|"+uptime+"|"+usedMem+"|"+totalMem+"|"+cpu);
 	});
 }, 2000);
+
+io.on('connection', function(socket){
+  socket.on('console', function(msg){
+    console.log(msg);
+  });
+});

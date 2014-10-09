@@ -12,7 +12,7 @@ html,body{
 }
 
 body{
-  	padding-top:50px; /*padding for navbar*/
+  	padding-top:30px; /*padding for navbar*/
 }
 
 .navbar-custom .icon-bar {
@@ -53,13 +53,14 @@ body{
   </style>
   </head>
   <body>
-  <div class="container">
 	<div class="navbar navbar-custom navbar-fixed-top">
-		<div class="navbar-header"><a class="navbar-brand" href="#">Node Manager</a>
+		<div class="navbar-header"><a class="navbar-brand" href="#">Cinemine</a>
 		</div>
-    </div><br>
+    </div>
+	<div id=nodebox" style="width:100%;"><br>
+	<h1 class="text-center" style="font-weight:bold;">Nodes</h1><hr>
 	<div id="probes" class="container">
-	<div id="row">
+	<div id="row"><br>
 	<div class="col-md-3"><div class="well"><h2 style="margin-top:0px; text-align:center; font-size:24px; font-weight:bold;">Manager</h2><hr>CPU Usage: <h4 id="ManagerCPU">Connecting...</h4>RAM Usage: <h4 id="ManagerRAM">Connecting...</h4></div></div>
     <script>
       var socket = io();
@@ -87,6 +88,17 @@ body{
     </script>
 	</div>
 	</div>
+	</div>
+	<hr>
+	<div id="consoleBody">
+	<h1 class="text-center" style="font-weight:bold;">Console</h1><br>
+		<div class="row" style="width:90%; margin:0 auto;">
+		<form action="">
+			<input id="c" autocomplete="off" class="col-md-12" placeholder=">" style="font-size:40px; border-style:solid; height:60px; background-color:#F6F6F6; border-color:#F3F3F3;" />
+		</form>
+		</div>
+	</div>
+	
   <script>
   function convertTime(seconds) {
 	ms = seconds*1000;
@@ -102,6 +114,13 @@ body{
 	$(destination).html(text);
   }
   </script>
-  </div>
+  <br>
+  <script>
+  $('form').submit(function(){
+    socket.emit('console', $('#c').val());
+    $('#c').val('');
+    return false;
+  });
+  </script>
   </body>
 </html>
