@@ -6,7 +6,7 @@ var io = require('socket.io')(http);
 var request = require("request");
 var utils  = require('os-utils');
 
-var IPList = ['127.0.0.1|Razer','192.168.1.148|Macbook'];
+var IPList = ['127.0.0.1|Blade','192.168.1.148|Macbook'];
 
 IPList.forEach(function(item) {
 var address = item.split("|")[0];

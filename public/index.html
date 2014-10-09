@@ -51,19 +51,10 @@ body{
 #left {
 	height:100%;
 }
-
-#map-canvas {
-	width:33.3333%;
-    height:calc(100% - 0);
-    position:absolute;
-    right:16px;
-    top:50px;
-    bottom:0;
-    overflow:hidden;
-}
   </style>
   </head>
   <body>
+  <div class="container">
 	<div class="navbar navbar-custom navbar-fixed-top">
 		<div class="navbar-header"><a class="navbar-brand" href="#">Node Manager</a>
 		</div>
@@ -76,7 +67,7 @@ body{
         IPList.forEach(function(item) {
 		  var address = item.split("|")[0];
 		  var friendlyName = item.split("|")[1];
-		  $('#probes').append('<h2>'+friendlyName+' <small>'+address+'</small></h2><div class="well row"><div id="'+friendlyName+'Mem" style="width:25%; height:200px;" class="col-md-3"></div><div id="'+friendlyName+'CPU" style="width:25%; height:200px;" class="col-md-3"></div></div>');
+		  $('#probes').append('<h2>'+friendlyName+' <small>'+address+'</small></h2><div class="well row"><div id="'+friendlyName+'Mem" style="width:50%; height:200px;" class="col-md-6"></div><div id="'+friendlyName+'CPU" style="width:50%; height:200px;" class="col-md-6"></div></div>');
         })
       });
 
@@ -189,5 +180,6 @@ body{
 	sec = Math.floor(((ms % 360000) % 60000) / 1000);
 	}
   </script>
+  </div>
   </body>
 </html>
