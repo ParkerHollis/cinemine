@@ -3,6 +3,7 @@ express = require( 'express' );
 var app = express();
 var os = require('os');
 var utils  = require('os-utils');
+var request = require("request");
 
 app.get( '/stats', function( request, response ) {
 	var uptime = Math.round(os.uptime());
