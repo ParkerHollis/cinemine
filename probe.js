@@ -18,7 +18,6 @@ app.get( '/stats', function( request, response ) {
 				cpu: cpu
             };
 		response.send(stats);
-		console.log(cpu);
 	});
 });
 var port = 4711;

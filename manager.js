@@ -4,6 +4,7 @@ var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var request = require("request");
+var utils  = require('os-utils');
 
 var IPList = ['127.0.0.1|Razer','192.168.1.148|Macbook'];
 
@@ -28,13 +29,14 @@ request({
 }, function (error, response, body) {
 		if (!error && response.statusCode === 200) {
 			var uptime = Math.floor(body.uptime);
+			var cpu = body.cpu;
 			var freeMem = (Math.floor((body.freemem)/1048576));
 			var totalMem = (Math.floor((body.totalmem)/1048576));
 			var usedMem = totalMem-freeMem;
-			log(uptime+"|"+usedMem+"|"+totalMem, friendlyName);
+			log(uptime+"|"+usedMem+"|"+totalMem+"|"+cpu, friendlyName);
 		}
 	})
-}, 1000);
+}, 2000);
 
 })
 

@@ -76,7 +76,7 @@ body{
         IPList.forEach(function(item) {
 		  var address = item.split("|")[0];
 		  var friendlyName = item.split("|")[1];
-		  $('#probes').append('<h2>'+friendlyName+' <small>'+address+'</small></h2><div class="well row"><div id="'+friendlyName+'Mem" style="width:25%; height:200px;" class="col-md-3"></div></div>');
+		  $('#probes').append('<h2>'+friendlyName+' <small>'+address+'</small></h2><div class="well row"><div id="'+friendlyName+'Mem" style="width:25%; height:200px;" class="col-md-3"></div><div id="'+friendlyName+'CPU" style="width:25%; height:200px;" class="col-md-3"></div></div>');
         })
       });
 
@@ -85,9 +85,12 @@ body{
         var uptime = msg.split("|")[1];
 		var usedMem = msg.split("|")[2];
 		var totalMem = msg.split("|")[3];
+		var usedCPU = msg.split("|")[4];
+		var freeCPU = 100-(usedCPU);
 		var freeMem = totalMem-usedMem;
 		convertTime(uptime);
 		updateChartMem(location, usedMem, freeMem);
+		updateChartCPU(location, usedCPU, freeCPU);
       });
     </script>
 	</div>
@@ -110,7 +113,7 @@ body{
 			backgroundColor: null
         },
 		title: {
-            text: ''
+            text: 'Memory'
         },
         plotOptions: {
             pie: {
@@ -128,6 +131,49 @@ body{
 			name: 'Megabytes',
 			animation: false,
             data: memoryData
+        }]
+    });
+	});
+	}
+	</script>
+	<br>
+	<script>
+	function updateChartCPU(chart, usedCPU, freeCPU) {
+		var destination = '#'+chart+'CPU';
+		var usedCPU = parseInt(usedCPU);
+		var freeCPU = parseInt(freeCPU);
+		var cpuData = [
+		['Free', freeCPU],
+		['Used', usedCPU]
+		];
+	$(function () {
+    $(destination).highcharts({
+		credits: {
+            enabled: false
+        },
+        chart: {
+            plotShadow: false,
+			backgroundColor: null
+        },
+		title: {
+            text: 'CPU'
+        },
+        plotOptions: {
+            pie: {
+                dataLabels: {
+                    enabled: false,
+                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                    style: {
+                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                    }
+                }
+            }
+        },
+        series: [{
+            type: 'pie',
+			name: 'Percent',
+			animation: false,
+            data: cpuData
         }]
     });
 	});
