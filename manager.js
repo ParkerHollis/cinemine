@@ -46,11 +46,11 @@ function log(message, item) {
 }
 
 app.get('/', function(req, res){
-  res.sendFile(application_root+'/public/index.html');
+  res.sendFile(application_root+'/public/nodes.html');
 });
 
  app.get(/^(.+)$/, function(req, res){ 
-     res.sendFile( __dirname + req.params[0]); 
+     res.sendFile( __dirname+'/public/' + req.params[0]); 
  });
 
 http.listen(4000, function(){
