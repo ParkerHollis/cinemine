@@ -1,8 +1,8 @@
 cinemine
 ---
-An open source media center and node manager controlled primarily by voice.
+An open source media center and node manager controlled through a web interface.
 
-Runs on Node.js using Express, MongoDB, ffmpeg, VLC, Google Speech, and more.
+Runs on Node.js using Express, MongoDB, jsmpeg, and more.
 
 Currently running on a Raspberry Pi for home media use.
 
